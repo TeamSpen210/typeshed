@@ -5,9 +5,7 @@ from typing import (
     Callable, Iterable, Type, NewType
 )
 from tkinter.constants import *  # noqa: F403
-
 from tkinter.font import Font
-
 from types import TracebackType
 
 # Font values can be several values:
@@ -15,18 +13,16 @@ from types import TracebackType
 # * (family, size)
 # * (family, size, bold/italic/underline/overstrike)
 # * TK categories matching the OS (string)
-FontValue = Union[Font, Tuple[str, Union[str, int]], Tuple[str, Union[str, int], str], str]
-
-Padding = Union[float, Tuple[float, float]]
-
-Window = Union[Tk, TopLevel]
+_FontValue = Union[Font, Tuple[str, Union[str, int]], Tuple[str, Union[str, int], str], str]
+_Padding = Union[float, Tuple[float, float]]
+_Window = Union[Tk, TopLevel]
 
 # The IDs given to callable functions.
-BindID = NewType('BindID', str)
+_BindID = NewType('BindID', str)
 # IDs for objects on canvases.
-CanvID = NewType('CanvID', int)
+_CanvID = NewType('CanvID', int)
 # Most of the time you can also pass a string tag.
-CanvTagOrID = Union[str, CanvID]
+_CanvTagOrID = Union[str, _CanvID]
 
 class TclError(Exception):
     ...
@@ -107,7 +103,7 @@ def getboolean(s: bool) -> int: ...
 
 class Misc:
     def destroy(self) -> None: ...
-    def deletecommand(self, name: BindID) -> None: ...
+    def deletecommand(self, name: _BindID) -> None: ...
     def tk_strictMotif(self, boolean: int=None) -> bool: ...
     def tk_bisque(self) -> None: ...
     def tk_setPalette(
@@ -159,7 +155,7 @@ class Misc:
         self,
         *,
         type: str='STRING',
-        window: Window=None
+        window: _Window=None
     ) -> str: ...
     def clipboard_clear(self, *, displayof: Misc=...) -> None: ...
     def clipboard_append(self, string: str, *, displayof: Misc=...) -> None: ...
@@ -279,29 +275,29 @@ class Misc:
     def bind(
         self,
         sequence: str=None,
-    ) -> Union[BindID, List[BindID]]: ...
+    ) -> Union[_BindID, List[_BindID]]: ...
     @overload
     def bind(
         self,
         sequence: str=None,
         func: Callable[[Event], Optional[str]]=None,
         add: str=None,
-    ) -> BindID: ...
-    def unbind(self, sequence: str, funcid: BindID=None) -> None: ...
+    ) -> _BindID: ...
+    def unbind(self, sequence: str, funcid: _BindID=None) -> None: ...
     def bind_all(
         self,
         sequence: str=None,
         func: Callable[[Event], Optional[str]]=None,
         add: str=None,
-    ) -> BindID: ...
-    def unbind_all(self, sequence: BindID) -> None: ...
+    ) -> _BindID: ...
+    def unbind_all(self, sequence: _BindID) -> None: ...
     def bind_class(
         self,
         className: str,
         sequence: str=None,
         func: Callable[[Event], Optional[str]]=None,
         add: str=None,
-    ) -> BindID: ...
+    ) -> _BindID: ...
     def unbind_class(self, className: str, sequence: str) -> None: ...
 
     def mainloop(self, n=0) -> None: ...
@@ -467,7 +463,7 @@ class Wm:
     def wm_focusmodel(self, model: str=None) -> None: ...
     focusmodel = wm_focusmodel
 
-    def wm_forget(self, window: Window) -> None: ...
+    def wm_forget(self, window: _Window) -> None: ...
     forget = wm_forget
 
     def wm_frame(self) -> str: ...
@@ -513,9 +509,9 @@ class Wm:
     def wm_iconmask(self, bitmap: str) -> None: ...
     iconmask = wm_iconmask
 
-    def iconname(self) -> str: ...
+    def wm_iconname(self) -> str: ...
     @overload
-    def iconname(self, newName: str) -> None: ...
+    def wm_iconname(self, newName: str) -> None: ...
     iconname = wm_iconname
 
     def wm_iconphoto(self, default: bool=False, *args: str) -> None: ...
@@ -572,7 +568,7 @@ class Wm:
     def wm_resizable(self) -> Tuple[int, int]: ...
     @overload
     def wm_resizable(self, width: bool, height: bool) -> str: ...
-    resizeable = wm_resizeable
+    resizeable = wm_resizable
 
     @overload
     def wm_sizefrom(self) -> str: ...
@@ -604,50 +600,17 @@ class Tk(Misc, Wm):
     master: None
     children: Dict[str, Any]
     tk: Any  # tk interpreter
-    def __init__(
-        self,
-        screenName: str=None,
-        baseName: str=None,
-        className='',
-        useTk: bool=1,
-        sync: Any=0,
-        use: Any=None,
-    ) -> None: ...
-
+    def __init__(self, screenName: str=None, baseName: str=None, className='', useTk: bool=1, sync: Any=0, use: Any=None) -> None: ...
     def loadtk(self) -> None: ...
     def destroy(self) -> None: ...
     def readprofile(self, baseName: str, className: str) -> None: ...
-    def report_callback_exception(
-        self,
-        exc: Type[Exception],
-        val: Exception,
-        tb: TracebackType,
-    ) -> None: ...
+    def report_callback_exception(self, exc: Type[Exception], val: Exception, tb: TracebackType) -> None: ...
     def __getattr__(self, attr: str) -> Any: ...
 
-def Tcl(
-    screenName: str=None,
-    baseName: str=None,
-    className: str='',
-    useTk: bol=0,
-) -> Tk: ...
+def Tcl(screenName: str = None, baseName: str = None, className: str = '', useTk: bool = 0) -> Tk: ...
 
 class Pack:
-    def pack_configure(self,
-       cnf=Dict[str, Any],
-       *,
-       after: Misc=None,
-       anchor: str='',
-       before: Misc=None,
-       expand: bool=False,
-       fill: str=NONE,
-       in_: Misc=None,
-       ipadx: Padding=None,
-       ipady: Padding=None,
-       padx: Padding=None,
-       pady: Padding=None,
-       side: str=None
-    ) -> None: ...
+    def pack_configure(self, cnf=Dict[str, Any], *, after: Misc=None, anchor: str='', before: Misc=None, expand: bool=False, fill: str=NONE, in_: Misc=None, ipadx: _Padding=None, ipady: _Padding=None, padx: _Padding=None, pady: _Padding=None, side: str=None) -> None: ...
     pack = pack_configure
 
     def pack_forget(self) -> None: ...
@@ -659,22 +622,7 @@ class Pack:
     slaves = Misc.pack_slaves
 
 class Place:
-    def place_configure(
-        self,
-        cnf: Dict[str, Union[Misc, int, float, str]]=...,
-        *,
-        in_: Misc=None,
-        x: int=None,
-        y: int=None,
-        relx: float=None,
-        rely: float=None,
-        anchor: str=None,
-        width: int=None,
-        height: int=None,
-        relwidth: float=None,
-        relheight: float=None,
-        bordermode: str=None,
-    ) -> None: ...
+    def place_configure(self, cnf: Dict[str, Union[Misc, int, float, str]]=..., *, in_: Misc=None, x: int=None, y: int=None, relx: float=None, rely: float=None, anchor: str=None, width: int=None, height: int=None, relwidth: float=None, relheight: float=None, bordermode: str=None) -> None: ...
     place = configure = config = place_configure
 
     def place_forget(self) -> None: ...
@@ -685,21 +633,7 @@ class Place:
     slaves = Misc.place_slaves
 
 class Grid:
-    def grid_configure(
-        self,
-        cnf: Dict[str, Union[Misc, int, float, str]]=...,
-        *,
-        column: int=None,
-        columnspan: int=None,
-        in_: Misc=None,
-        ipadx: Padding=None,
-        ipady: Padding=None,
-        padx: Padding=None,
-        pady: Padding=None,
-        row: int=None,
-        rowspan: int=None,
-        sticky: str=NSEW,
-    ) -> None: ...
+    def grid_configure(self, cnf: Dict[str, Union[Misc, int, float, str]]=..., *, column: int=None, columnspan: int=None, in_: Misc=None, ipadx: _Padding=None, ipady: _Padding=None, padx: _Padding=None, pady: _Padding=None, row: int=None, rowspan: int=None, sticky: str=...) -> None: ...
     grid = configure = config = grid_configure
 
     bbox = grid_bbox = Misc.grid_bbox
@@ -721,7 +655,9 @@ class Grid:
     slaves = grid_slaves = Misc.grid_slaves
 
 class BaseWidget(Misc):
-    widgetName = ...  # type: str
+    widgetName: str
+    tk: Tk
+    _w: str  # undocumented
 
     def __init__(
         self,
@@ -739,7 +675,7 @@ class Widget(BaseWidget, Pack, Place, Grid):
 class Toplevel(BaseWidget, Wm):
     def __init__(
         self,
-        master: Window,
+        master: _Window,
         cnf=Mapping[str, Any],
         *,
         class_: str='TopLevel',
@@ -777,15 +713,15 @@ class Button(Widget):
         bitmap: str=None,
         borderwidth: int=None,
         cursor: str=None,
-        font: FontValue=None,
+        font: _FontValue=None,
         highlightbackground: str=None,
         highlightcolor: str=None,
         highlightthickness: Union[str, int]=None,
         image: Image=None,
 
         justify: str=None,
-        padx: Padding=None,
-        pady: Padding=None,
+        padx: _Padding=None,
+        pady: _Padding=None,
 
         relief: str=None,
         overrelief: str=None,
@@ -854,9 +790,9 @@ class Canvas(Widget, XView, YView):
         yscrollincrement: Union[float, str]=None,
     ) -> None: ...
     def addtag(self, *args: str) -> None: ...
-    def addtag_above(self, newtag: str, tagOrId: CanvTagOrID) -> None: ...
+    def addtag_above(self, newtag: str, tagOrId: _CanvTagOrID) -> None: ...
     def addtag_all(self, newtag: str) -> None: ...
-    def addtag_below(self, newtag: str, tagOrId: CanvTagOrID) -> None: ...
+    def addtag_below(self, newtag: str, tagOrId: _CanvTagOrID) -> None: ...
     def addtag_closest(
         self, 
         newtag: str, 
@@ -884,20 +820,20 @@ class Canvas(Widget, XView, YView):
         y2: float,
     ) -> None: ...
     
-    def addtag_withtag(self, newtag: str, tagOrId: CanvTagOrID) -> None: ...
+    def addtag_withtag(self, newtag: str, tagOrId: _CanvTagOrID) -> None: ...
     def bbox(
         self,
         *args: str,
     ) -> Optional[Tuple[float, float, float, float]]: ...
 
-    def tag_unbind(self, tagOrId: CanvTagOrID, sequence: str, funcid: BindID=None) -> None: ...
+    def tag_unbind(self, tagOrId: _CanvTagOrID, sequence: str, funcid: _BindID=None) -> None: ...
     def tag_bind(
         self,
-        tagOrId: CanvTagOrID,
+        tagOrId: _CanvTagOrID,
         sequence: str=None,
         func: Callable[[Event], Optional[str]]=None,
         add: bool=None
-    ) -> BindID: ...
+    ) -> _BindID: ...
 
     def canvasx(self, screenx: int, gridspacing: int=None) -> float: ...
     def canvasy(self, screeny: int, gridspacing: int=None) -> float: ...
@@ -945,7 +881,7 @@ class Canvas(Widget, XView, YView):
         width: Union[float, str]=None,
         activewidth: Union[float, str]=None,
         disabledwidth: Union[float, str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
     @overload
     def create_bitmap(
         self,
@@ -967,7 +903,7 @@ class Canvas(Widget, XView, YView):
         anchor: str=None,
         state: str=None,
         tags: List[str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
     @overload
     def create_bitmap(
         self,
@@ -988,7 +924,7 @@ class Canvas(Widget, XView, YView):
         anchor: str=None,
         state: str=None,
         tags: List[str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
 
     @overload
     def create_image(
@@ -1003,7 +939,7 @@ class Canvas(Widget, XView, YView):
         anchor: str=None,
         state: str=None,
         tags: List[str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
     @overload
     def create_image(
         self,
@@ -1016,7 +952,7 @@ class Canvas(Widget, XView, YView):
         anchor: str=None,
         state: str=None,
         tags: List[str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
 
     @overload
     def create_line(
@@ -1048,7 +984,7 @@ class Canvas(Widget, XView, YView):
         width: Union[float, str]=None,
         activewidth: Union[float, str]=None,
         disabledwidth: Union[float, str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
     @overload
     def create_line(
         self,
@@ -1080,7 +1016,7 @@ class Canvas(Widget, XView, YView):
         width: Union[float, str]=None,
         activewidth: Union[float, str]=None,
         disabledwidth: Union[float, str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
 
     @overload
     def create_oval(
@@ -1118,7 +1054,7 @@ class Canvas(Widget, XView, YView):
         width: Union[float, str]=None,
         activewidth: Union[float, str]=None,
         disabledwidth: Union[float, str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
     @overload
     def create_oval(
         self,
@@ -1152,7 +1088,7 @@ class Canvas(Widget, XView, YView):
         width: Union[float, str]=None,
         activewidth: Union[float, str]=None,
         disabledwidth: Union[float, str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
 
     def create_polygon(
         self,
@@ -1189,7 +1125,7 @@ class Canvas(Widget, XView, YView):
         width: Union[float, str]=None,
         activewidth: Union[float, str]=None,
         disabledwidth: Union[float, str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
 
     @overload
     def create_rectangle(
@@ -1227,7 +1163,7 @@ class Canvas(Widget, XView, YView):
         width: Union[float, str]=None,
         activewidth: Union[float, str]=None,
         disabledwidth: Union[float, str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
     @overload
     def create_rectangle(
         self,
@@ -1261,7 +1197,7 @@ class Canvas(Widget, XView, YView):
         width: Union[float, str]=None,
         activewidth: Union[float, str]=None,
         disabledwidth: Union[float, str]=None,
-    ) -> CanvID: ...
+    ) -> _CanvID: ...
 
     @overload
     def create_text(
@@ -1270,7 +1206,7 @@ class Canvas(Widget, XView, YView):
         y: float,
         *,
         angle: float=None,
-        font: FontValue=None,
+        font: _FontValue=None,
         justify: str=None,
         text: str=None,
         underline: int=None,
@@ -1295,7 +1231,7 @@ class Canvas(Widget, XView, YView):
         xy: Union[List[float], Tuple[float, float]],
         *,
         angle: float=None,
-        font: FontValue=None,
+        font: _FontValue=None,
         justify: str=None,
         text: str=None,
         underline: int=None,
@@ -1346,10 +1282,10 @@ class Canvas(Widget, XView, YView):
     def dchars(self, *args: str) -> None: ...
     def delete(self, *args: str) -> None: ...
     def dtag(self, *args: str) -> None: ...
-    def find(self, *args: str) -> Tuple[CanvID]: ...
-    def find_above(self, tagOrId: CanvTagOrID) -> Tuple[CanvID]: ...
-    def find_all(self) -> Tuple[CanvID]: ...
-    def find_below(self, tagOrId: CanvTagOrID) -> Tuple[CanvID]: ...
+    def find(self, *args: str) -> Tuple[_CanvID]: ...
+    def find_above(self, tagOrId: _CanvTagOrID) -> Tuple[_CanvID]: ...
+    def find_all(self) -> Tuple[_CanvID]: ...
+    def find_below(self, tagOrId: _CanvTagOrID) -> Tuple[_CanvID]: ...
     def find_closest(self, x, y, halo=None, start=None) -> None: ...
     def find_enclosed(
         self,
@@ -1357,36 +1293,36 @@ class Canvas(Widget, XView, YView):
         y1: float,
         x2: float,
         y2: float,
-    ) -> Tuple[CanvID]: ...
+    ) -> Tuple[_CanvID]: ...
     def find_overlapping(
         self,
         x1: float,
         y1: float,
         x2: float,
         y2: float,
-    ) -> Tuple[CanvID]: ...
-    def find_withtag(self, tagOrId: CanvTagOrID) -> Tuple[CanvID]: ...
+    ) -> Tuple[_CanvID]: ...
+    def find_withtag(self, tagOrId: _CanvTagOrID) -> Tuple[_CanvID]: ...
 
     @overload
-    def focus(self) -> CanvID: ...
+    def focus(self) -> _CanvID: ...
     @overload
     def focus(self, _arg: str) -> None: ... # focus('')
     @overload
-    def focus(self, *args: CanvTagOrID) -> None: ...
+    def focus(self, *args: _CanvTagOrID) -> None: ...
 
-    def gettags(self, *args: CanvTagOrID) -> Tuple[str]: ...
-    def icursor(self, _tagOrID: CanvTagOrID, _index: Union[str, int]) -> None: ...
-    def index(self, _tagOrID: CanvTagOrID, _index: Union[str, int], _x: float, _y:float) -> int: ...
+    def gettags(self, *args: _CanvTagOrID) -> Tuple[str]: ...
+    def icursor(self, _tagOrID: _CanvTagOrID, _index: Union[str, int]) -> None: ...
+    def index(self, _tagOrID: _CanvTagOrID, _index: Union[str, int], _x: float, _y:float) -> int: ...
 
     @overload
-    def insert(self, _tagOrID: CanvTagOrID, _index: Union[str, int], _string: str) -> None: ...
+    def insert(self, _tagOrID: _CanvTagOrID, _index: Union[str, int], _string: str) -> None: ...
     @overload
-    def insert(self, _tagOrID: CanvTagOrID, _index: Tuple[float, float], _string: Tuple[float, float]) -> None: ...
+    def insert(self, _tagOrID: _CanvTagOrID, _index: Tuple[float, float], _string: Tuple[float, float]) -> None: ...
 
-    def itemcget(self, tagOrId: CanvTagOrID, option: str) -> Any: ...
+    def itemcget(self, tagOrId: _CanvTagOrID, option: str) -> Any: ...
     def itemconfigure(
         self,
-        tagOrId: CanvTagOrID,
+        tagOrId: _CanvTagOrID,
         cnf: Dict[str, Any]=None,
         # Union of all the create_*'s keyword arguments:
         activebackground: str=None,
@@ -1418,7 +1354,7 @@ class Canvas(Widget, XView, YView):
         disabledwidth: Union[float, str]=None,
         extent: float=None,
         fill: str=None,
-        font: FontValue=None,
+        font: _FontValue=None,
         foreground: str=None,
         height: Union[float, str]=None,
         image: Image=None,
@@ -1443,9 +1379,9 @@ class Canvas(Widget, XView, YView):
     ) -> None: ...
     itemconfig = itemconfigure
 
-    def tag_lower(self, _items: CanvTagOrID, _below: CanvTagOrID=None) -> None: ...
+    def tag_lower(self, _items: _CanvTagOrID, _below: _CanvTagOrID=None) -> None: ...
     lower = tag_lower
-    def move(self, _items: CanvTagOrID, _x: float, _y: float) -> None: ...
+    def move(self, _items: _CanvTagOrID, _x: float, _y: float) -> None: ...
     def postscript(
         self,
         cnf: Dict[str, Any],
@@ -1466,12 +1402,12 @@ class Canvas(Widget, XView, YView):
         x: float,
         y: float,
     ) -> None: ...
-    def tag_raise(self, _items: CanvTagOrID, _above: CanvTagOrID=None) -> None: ...
+    def tag_raise(self, _items: _CanvTagOrID, _above: _CanvTagOrID=None) -> None: ...
     lift = tag_raise
 
     def scale(
         self,
-        _tagOrId: CanvTagOrID,
+        _tagOrId: _CanvTagOrID,
         _xOrigin: float,
         _yOrigin: float,
         _xScale: float,
@@ -1481,18 +1417,18 @@ class Canvas(Widget, XView, YView):
     def scan_mark(self, x: float, y: float) -> None: ...
     def scan_dragto(self, x: float, y: float, gain: float=10) -> None: ...
 
-    def select_adjust(self, tagOrId: CanvTagOrID, index: str) -> None: ...
+    def select_adjust(self, tagOrId: _CanvTagOrID, index: str) -> None: ...
     def select_clear(self) -> None: ...
-    def select_from(self, tagOrId: CanvTagOrID, index: str) -> None: ...
+    def select_from(self, tagOrId: _CanvTagOrID, index: str) -> None: ...
     def select_item(self) -> None: ...
-    def select_to(self, tagOrId: CanvTagOrID, index: str) -> None: ...
+    def select_to(self, tagOrId: _CanvTagOrID, index: str) -> None: ...
     def type(self, tagOrId: StringVar) -> Optional[str]: ...
 
 class Checkbutton(Widget):
     def __init__(
         self,
         master: Misc=None,
-        cnf: Dict[str, Union[str, int, float, Image, Padding, StringVar]]=...,
+        cnf: Dict[str, Union[str, int, float, Image, _Padding, StringVar]]=...,
         *,
         activebackground: str=None,
         activeforeground: str=None,
@@ -1505,15 +1441,15 @@ class Checkbutton(Widget):
         compound: str=None,
         cursor: str=None,
         disabledforeground: str=None,
-        font: FontValue=None,
+        font: _FontValue=None,
         foreground: str=None,
         highlightbackground: str=None,
         highlightcolor: str=None,
         highlightthickness: float=None,
         image: Image=None,
         justify: str=None,
-        padx: Padding=None,
-        pady: Padding=None,
+        padx: _Padding=None,
+        pady: _Padding=None,
         relief: str=None,
         takefocus: str=None,
         text: str=None,
@@ -1641,7 +1577,7 @@ class Radiobutton(Widget):
         bitmap: str='',
         image: Image=None,
         selectimage: Image=None,
-        font: FontValue=None,
+        font: _FontValue=None,
         indicatoron: int=0,
         state: str=NORMAL,
 
@@ -1649,8 +1585,8 @@ class Radiobutton(Widget):
         overrelief: str=FLAT,
         relief: str=FLAT,
 
-        padx: Padding=1,
-        pady: Padding=1,
+        padx: _Padding=1,
+        pady: _Padding=1,
 
         height=1,
         width: int=None,
@@ -1696,7 +1632,7 @@ class Scale(Widget):
         sliderrelief: str=RAISED,
 
         variable: Union[IntVar, DoubleVar, StringVar]=None,
-        font: FontValue=None,
+        font: _FontValue=None,
         label: str='',
         cursor='',
         orient: str=VERTICAL,
@@ -1848,7 +1784,7 @@ class Text(Widget, XView, YView):
         cnf=None,
         *,
         borderwidth: int=0,
-        font: FontValue=None,
+        font: _FontValue=None,
         justify: str=LEFT,
         overstrike: int=0,
         underline: int=0,
@@ -1892,8 +1828,8 @@ class Text(Widget, XView, YView):
         window: Misc=None,
         create: Callable[[], Misc]=None,
         align: str=CENTER,
-        padx: Padding=0,
-        pady: Padding=0,
+        padx: _Padding=0,
+        pady: _Padding=0,
         stretch: bool=0
     ) -> None: ...
 
