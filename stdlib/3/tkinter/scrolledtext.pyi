@@ -1,0 +1,6 @@
+from tkinter import Text
+
+class ScrolledText(Text): ...
+    # All the methods do the same as the Text widget, so use those type hints.
+
+def example() -> None: ...
