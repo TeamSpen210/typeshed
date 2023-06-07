@@ -1,9 +1,10 @@
 from collections.abc import Callable, Iterable
-from typing import Any, Self, TypeAlias, TypeVar
+from typing import Any, TypeVar
+from typing_extensions import Self, TypeAlias
 
 from mistletoe.block_token import BlockToken
 
-T = TypeVar("T")
+_T = TypeVar("_T")
 _TokenMaker: TypeAlias = Callable[..., BlockToken]
 
 class FileWrapper:
@@ -24,6 +25,6 @@ def make_tokens(parse_buffer: Iterable[tuple[_TokenMaker, Any]]) -> list[BlockTo
 
 class ParseBuffer(list[tuple[_TokenMaker, Any]]):
     loose: bool
-    def __init__(self, iterable: Iterable[tuple[_TokenMaker, Any]] = ..., /) -> None: ...
+    def __init__(self, __iterable: Iterable[tuple[_TokenMaker, Any]] = ...) -> None: ...
     # Narrow this since we can describe the relationship safely.
-    def append(self, pair: tuple[Callable[[T], BlockToken], T], /) -> None: ...
+    def append(self, __object: tuple[Callable[[_T], BlockToken], _T]) -> None: ...

@@ -1,7 +1,8 @@
 import re
-from typing import Container, TypeAlias
+from typing import Container
+from typing_extensions import TypeAlias
 
-from block_token import Document
+from mistletoe.block_token import Document
 
 whitespace: set[str]
 unicode_whitespace: set[str]

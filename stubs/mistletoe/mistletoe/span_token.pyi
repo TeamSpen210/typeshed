@@ -22,9 +22,9 @@ class SpanToken(token.Token):
 
 class CoreTokens(SpanToken):
     precedence: ClassVar[int] = 3
-    def __new__(self, match: ParseToken) -> SpanToken: ...
+    def __new__(self, match: ParseToken) -> SpanToken: ...  # type: ignore[misc]
     @classmethod
-    def find(cls, string: str) -> list[MatchObj]: ...
+    def find(cls, string: str) -> list[MatchObj]: ...  # type: ignore[override]
 
 class Strong(SpanToken):
     children: list[SpanToken]
@@ -39,7 +39,7 @@ class InlineCode(SpanToken):
     children: tuple[RawText]
     def __init__(self, match: MatchObj) -> None: ...
     @classmethod
-    def find(cls, string: str) -> list[MatchObj]: ...
+    def find(cls, string: str) -> list[MatchObj]: ...  # type: ignore[override]
 
 class Strikethrough(SpanToken):
     pattern: ClassVar[re.Pattern[str]]

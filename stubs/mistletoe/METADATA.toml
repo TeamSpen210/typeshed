@@ -1,1 +1,5 @@
 version = "1.0.*"
+requires = ["types-Pygments"]
+
+[tool.stubtest]
+stubtest_requirements = ["Pygments"]

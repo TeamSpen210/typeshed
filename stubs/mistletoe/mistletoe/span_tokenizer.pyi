@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from typing import Literal
+from typing_extensions import Literal
 
 from mistletoe.core_tokens import MatchObj
 from mistletoe.span_token import SpanToken
