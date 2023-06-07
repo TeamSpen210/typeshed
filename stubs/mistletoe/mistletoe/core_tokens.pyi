@@ -1,5 +1,4 @@
 import re
-from _typeshed import Incomplete
 from typing import Container, TypeAlias
 
 from block_token import Document
@@ -48,7 +47,7 @@ class Delimiter:
     def closed_by(self, other: Delimiter) -> bool: ...
 
 class MatchObj:
-    fields: Incomplete
+    fields: tuple[_StartEndMatch, ...]
     def __init__(self, start, end, *fields: _StartEndMatch) -> None: ...
     def start(self, n: int = 0) -> int: ...
     def end(self, n: int = 0) -> int: ...

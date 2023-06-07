@@ -1,9 +1,9 @@
 from typing import Callable, Generic, Self, TypeVar, TypedDict
+from types import TracebackType
 
 from mistletoe import block_token, span_token
 from mistletoe.token import Token
 from mistletoe.core_tokens import _DestTitle
-from types import TracebackType
 
 
 ResultT = TypeVar('ResultT')

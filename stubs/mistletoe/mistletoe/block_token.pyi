@@ -1,13 +1,10 @@
 from collections.abc import Callable, Iterable, Sequence
-from typing import Any, ClassVar, Literal, NoReturn, Protocol, TypeAlias, TypeVar, overload
+from typing import Any, ClassVar, Literal, NoReturn, Protocol, TypeAlias, overload
 
 import re
 
-import span_token
-from _typeshed import Incomplete
-
 from mistletoe.block_tokenizer import ParseBuffer
-from mistletoe.span_token import SpanToken
+from mistletoe.span_token import SpanToken, RawText
 from mistletoe import core_tokens, token
 
 class BlockToken(token.Token):
@@ -72,7 +69,7 @@ class Paragraph(BlockToken):
 class BlockCode(BlockToken):
     repr_attributes: ClassVar[tuple[str, ...]]
     language: Literal['']
-    children: tuple[span_token.RawText]
+    children: tuple[RawText]
     def __init__(self, lines: list[str]) -> None: ...
     @property
     def content(self) -> str: ...
@@ -87,7 +84,7 @@ class CodeFence(BlockToken):
     repr_attributes: ClassVar[tuple[str, ...]]
     pattern: ClassVar[re.Pattern[str]]
     language: str
-    children: tuple[span_token.RawText]
+    children: tuple[RawText]
     def __init__(self, match: tuple[list[str], tuple[int, str, str]]) -> None: ...
     @property
     def content(self) -> str: ...
@@ -160,7 +157,7 @@ class TableRow(BlockToken):
     repr_attributes: ClassVar[tuple[str, ...]]
     split_pattern: ClassVar[re.Pattern[str]]
     escaped_pipe_pattern: ClassVar[re.Pattern[str]]
-    row_align: Incomplete
+    row_align: list[_TableAlign]
     children: list[TableCell]
     def __init__(self, line: list[str], row_align: list[_TableAlign] | None = None) -> None: ...
 
@@ -202,7 +199,7 @@ class HTMLBlock(BlockToken):
     predefined: ClassVar[re.Pattern[str]]
     custom_tag: ClassVar[re.Pattern[str]]
 
-    children: list[span_token.RawText]
+    children: list[RawText]
     def __init__(self, lines: list[str]) -> None: ...
     @property
     def content(self) -> str: ...
