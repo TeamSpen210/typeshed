@@ -49,6 +49,7 @@
         "stubs/mysqlclient",
         "stubs/oauthlib",
         "stubs/openpyxl",
+        "stubs/mistletoe",
         "stubs/passlib",
         "stubs/peewee",
         "stubs/pexpect",
