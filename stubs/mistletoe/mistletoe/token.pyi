@@ -1,4 +1,5 @@
-from _typeshed import Incomplete
+from collections.abc import Iterable
+from typing import ClassVar
 
 class Token:
-    repr_attributes: Incomplete
+    repr_attributes: ClassVar[Iterable[str]]

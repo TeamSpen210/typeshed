@@ -1,12 +1,16 @@
-from _typeshed import Incomplete
 from collections.abc import Generator
 from typing import NamedTuple
 
+from mistletoe.token import Token
+
 class TraverseResult(NamedTuple):
-    node: Incomplete
-    parent: Incomplete
-    depth: Incomplete
+    node: Token
+    parent: Token
+    depth: int
 
 def traverse(
-    source, klass: Incomplete | None = ..., depth: Incomplete | None = ..., include_source: bool = ...
-) -> Generator[Incomplete, None, None]: ...
+    source: Token,
+    klass: type[Token] | None = ...,
+    depth: int | None = ...,
+    include_source: bool = False
+) -> Generator[Token, None, None]: ...
