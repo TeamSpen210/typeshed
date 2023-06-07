@@ -1,92 +1,100 @@
-from _typeshed import Incomplete
+import re
+from typing import ClassVar
 
+from mistletoe.core_tokens import MatchObj
+from mistletoe.span_tokenizer import ParseToken
 from mistletoe import token
 
 class SpanToken(token.Token):
-    parse_inner: bool
-    parse_group: int
-    precedence: int
-    content: Incomplete
-    def __init__(self, match) -> None: ...
-    def __contains__(self, text) -> bool: ...
+    parse_inner: ClassVar[bool] = True
+    parse_group: ClassVar[int] = 1
+    precedence: ClassVar[int] = 5
+    content: str
+    def __init__(self, match: MatchObj) -> None: ...
+    def __contains__(self, text: str) -> bool: ...
     @classmethod
-    def find(cls, string): ...
+    def find(cls, string: str) -> list[str]: ...
 
 class CoreTokens(SpanToken):
-    precedence: int
-    def __new__(self, match): ...
+    precedence: ClassVar[int] = 3
+    def __new__(self, match: ParseToken) -> SpanToken: ...
     @classmethod
-    def find(cls, string): ...
+    def find(cls, string: str) -> list[MatchObj]: ...
 
-class Strong(SpanToken): ...
-class Emphasis(SpanToken): ...
+class Strong(SpanToken):
+    children: list[SpanToken]
+class Emphasis(SpanToken):
+    children: list[SpanToken]
 
 class InlineCode(SpanToken):
-    pattern: Incomplete
-    parse_inner: bool
-    parse_group: int
-    children: Incomplete
-    def __init__(self, match) -> None: ...
+    pattern: ClassVar[re.Pattern[str]]
+    parse_inner: ClassVar[bool] = False
+    parse_group: ClassVar[int] = 2
+    children: tuple[RawText]
+    def __init__(self, match: MatchObj) -> None: ...
     @classmethod
-    def find(cls, string): ...
+    def find(cls, string: str) -> list[MatchObj]: ...
 
 class Strikethrough(SpanToken):
-    pattern: Incomplete
+    pattern: ClassVar[re.Pattern[str]]
+    children: list[SpanToken]
 
 class Image(SpanToken):
-    repr_attributes: Incomplete
-    src: Incomplete
-    title: Incomplete
-    def __init__(self, match) -> None: ...
+    repr_attributes: ClassVar[tuple[str, ...]]
+    src: str
+    title: str
+    children: list[SpanToken]
+    def __init__(self, match: MatchObj) -> None: ...
 
 class Link(SpanToken):
-    repr_attributes: Incomplete
-    target: Incomplete
-    title: Incomplete
-    def __init__(self, match) -> None: ...
+    repr_attributes: ClassVar[tuple[str, ...]]
+    target: str
+    title: str
+    children: list[SpanToken]
+    def __init__(self, match: MatchObj) -> None: ...
 
 class AutoLink(SpanToken):
-    repr_attributes: Incomplete
-    pattern: Incomplete
-    parse_inner: bool
-    children: Incomplete
-    target: Incomplete
-    mailto: Incomplete
-    def __init__(self, match) -> None: ...
+    repr_attributes: ClassVar[tuple[str, ...]]
+    pattern: ClassVar[re.Pattern[str]]
+    parse_inner: ClassVar[bool] = False
+    children: tuple[RawText]
+    target: str
+    mailto: bool
+    def __init__(self, match: MatchObj) -> None: ...
 
 class EscapeSequence(SpanToken):
-    pattern: Incomplete
-    parse_inner: bool
-    precedence: int
-    children: Incomplete
-    def __init__(self, match) -> None: ...
+    pattern: ClassVar[re.Pattern[str]]
+    parse_inner: ClassVar[bool] = False
+    precedence: ClassVar[int] = 2
+    children: tuple[RawText]
+    def __init__(self, match: MatchObj) -> None: ...
     @classmethod
-    def strip(cls, string): ...
+    def strip(cls, string: str) -> str: ...
 
 class LineBreak(SpanToken):
-    repr_attributes: Incomplete
-    pattern: Incomplete
-    parse_inner: bool
-    parse_group: int
-    soft: Incomplete
+    repr_attributes: ClassVar[tuple[str, ...]]
+    pattern: ClassVar[re.Pattern[str]]
+    parse_inner: ClassVar[bool] = False
+    parse_group: ClassVar[int] = 0
+    soft: bool
     content: str
-    def __init__(self, match) -> None: ...
+    def __init__(self, match: MatchObj) -> None: ...
 
 class RawText(SpanToken):
-    content: Incomplete
-    def __init__(self, content) -> None: ...
+    content: str
+    def __init__(self, content: str) -> None: ...
 
 class HTMLSpan(SpanToken):
-    pattern: Incomplete
-    parse_inner: bool
-    parse_group: int
+    pattern: ClassVar[re.Pattern[str]]
+    parse_inner: ClassVar[bool] = False
+    parse_group: ClassVar[int] = 0
 
 class XWikiBlockMacroStart(SpanToken):
-    pattern: Incomplete
-    parse_inner: bool
-    parse_group: int
+    pattern: ClassVar[re.Pattern[str]]
+    parse_inner: ClassVar[bool] = False
+    parse_group: ClassVar[int] = 1
 
 class XWikiBlockMacroEnd(SpanToken):
-    pattern: Incomplete
-    parse_inner: bool
-    parse_group: int
+    pattern: ClassVar[re.Pattern[str]]
+    parse_inner: ClassVar[bool] = False
+    parse_group: ClassVar[int] = 1
