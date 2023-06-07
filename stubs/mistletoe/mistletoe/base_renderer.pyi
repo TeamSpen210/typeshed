@@ -2,6 +2,7 @@ from typing import Callable, Generic, Self, TypeVar, TypedDict
 
 from mistletoe import block_token, span_token
 from mistletoe.token import Token
+from mistletoe.core_tokens import _DestTitle
 from types import TracebackType
 
 
@@ -34,7 +35,7 @@ class _RenderMap(TypedDict, Generic[ResultT]):
 
 class BaseRenderer(Generic[ResultT]):
     render_map: _RenderMap[ResultT]
-    footnotes: dict[str, tuple[str, str]]
+    footnotes: dict[str, _DestTitle]
     def __init__(self, *extras: type[Token]) -> None: ...
     def render(self, token: Token) -> ResultT: ...
     def render_inner(self, token: Token) -> str: ...
