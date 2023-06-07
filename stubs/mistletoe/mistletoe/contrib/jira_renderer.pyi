@@ -1,7 +1,6 @@
-from mistletoe.token import Token
-
+from mistletoe import block_token, span_token
 from mistletoe.base_renderer import BaseRenderer
-from mistletoe import span_token, block_token
+from mistletoe.token import Token
 
 class JIRARenderer(BaseRenderer[str]):
     listTokens: list[str]

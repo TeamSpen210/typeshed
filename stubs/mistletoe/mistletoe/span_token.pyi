@@ -1,15 +1,14 @@
 import re
 from typing import ClassVar
 
+from mistletoe import token
 from mistletoe.core_tokens import MatchObj
 from mistletoe.span_tokenizer import ParseToken
-from mistletoe import token
 
 def tokenize_inner(content: str) -> list[SpanToken]: ...
 def add_token(token_cls: type[SpanToken], position: int = 1) -> None: ...
 def remove_token(token_cls: type[SpanToken]) -> None: ...
 def reset_tokens() -> None: ...
-
 
 class SpanToken(token.Token):
     parse_inner: ClassVar[bool] = True
@@ -29,6 +28,7 @@ class CoreTokens(SpanToken):
 
 class Strong(SpanToken):
     children: list[SpanToken]
+
 class Emphasis(SpanToken):
     children: list[SpanToken]
 

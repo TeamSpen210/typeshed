@@ -1,7 +1,7 @@
+from mistletoe import block_token, span_token
+from mistletoe.base_renderer import BaseRenderer
 from mistletoe.latex_token import Math
 from mistletoe.token import Token
-from mistletoe import span_token, block_token
-from mistletoe.base_renderer import BaseRenderer
 
 verb_delimiters: str
 

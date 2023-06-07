@@ -1,12 +1,10 @@
+import re
 from collections.abc import Callable, Iterable, Sequence
 from typing import Any, ClassVar, Literal, NoReturn, Protocol, TypeAlias, overload
 
-import re
-
-from mistletoe.block_tokenizer import ParseBuffer
-from mistletoe.span_token import SpanToken, RawText
 from mistletoe import core_tokens, token
-
+from mistletoe.block_tokenizer import ParseBuffer
+from mistletoe.span_token import RawText, SpanToken
 
 def tokenize(lines: Iterable[str]) -> list[BlockToken]: ...
 def add_token(token_cls: type[BlockToken], position: int = 1) -> None: ...
@@ -74,7 +72,7 @@ class Paragraph(BlockToken):
 
 class BlockCode(BlockToken):
     repr_attributes: ClassVar[tuple[str, ...]]
-    language: Literal['']
+    language: Literal[""]
     children: tuple[RawText]
     def __init__(self, lines: list[str]) -> None: ...
     @property
@@ -102,12 +100,14 @@ class CodeFence(BlockToken):
 # List().start is int | None, while List.start() is a classmethod.
 class _ListStart(Protocol):
     def __call__(self, line: str) -> re.Match[str] | None: ...
+
 class _ListStartDescriptor:
     @overload
     def __get__(self, instance: None, owner: object) -> _ListStart: ...
     @overload
     def __get__(self, instance: List, owner: object) -> int | None: ...
     def __set__(self, instance: List, value: int | None) -> None: ...
+
 _ListMarker: TypeAlias = tuple[int, str, str] | None
 
 class List(BlockToken):

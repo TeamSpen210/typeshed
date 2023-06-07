@@ -1,9 +1,9 @@
 from typing import ClassVar
 
 from mistletoe.block_token import Document
-from mistletoe.latex_token import Math
 from mistletoe.html_renderer import HTMLRenderer
 from mistletoe.latex_renderer import LaTeXRenderer
+from mistletoe.latex_token import Math
 
 class MathJaxRenderer(HTMLRenderer, LaTeXRenderer):
     mathjax_src: ClassVar[str]

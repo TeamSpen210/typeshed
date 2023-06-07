@@ -1,12 +1,12 @@
-from typing import Callable, Generic, Self, TypeVar, TypedDict
 from types import TracebackType
+from typing import Callable, Generic, Self, TypedDict, TypeVar
 
 from mistletoe import block_token, span_token
-from mistletoe.token import Token
 from mistletoe.core_tokens import _DestTitle
+from mistletoe.token import Token
 
+ResultT = TypeVar("ResultT")
 
-ResultT = TypeVar('ResultT')
 class _RenderMap(TypedDict, Generic[ResultT]):
     Strong: Callable[[span_token.Strong], ResultT]
     Emphasis: Callable[[span_token.Emphasis], ResultT]
@@ -32,7 +32,6 @@ class _RenderMap(TypedDict, Generic[ResultT]):
     LineBreak: Callable[[span_token.LineBreak], ResultT]
     Document: Callable[[block_token.Document], ResultT]
 
-
 class BaseRenderer(Generic[ResultT]):
     render_map: _RenderMap[ResultT]
     footnotes: dict[str, _DestTitle]
@@ -40,8 +39,9 @@ class BaseRenderer(Generic[ResultT]):
     def render(self, token: Token) -> ResultT: ...
     def render_inner(self, token: Token) -> str: ...
     def __enter__(self) -> Self: ...
-    def __exit__(self, exception_type: type[BaseException] | None, exception_val: BaseException | None, traceback: TracebackType | None) -> None: ...
-
+    def __exit__(
+        self, exception_type: type[BaseException] | None, exception_val: BaseException | None, traceback: TracebackType | None
+    ) -> None: ...
     def render_raw_text(self, token: span_token.RawText) -> ResultT: ...
     def render_strong(self, token: span_token.Strong) -> ResultT: ...
     def render_emphasis(self, token: span_token.Emphasis) -> ResultT: ...

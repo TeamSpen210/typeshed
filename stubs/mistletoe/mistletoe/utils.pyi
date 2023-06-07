@@ -9,8 +9,5 @@ class TraverseResult(NamedTuple):
     depth: int
 
 def traverse(
-    source: Token,
-    klass: type[Token] | None = ...,
-    depth: int | None = ...,
-    include_source: bool = False
+    source: Token, klass: type[Token] | None = ..., depth: int | None = ..., include_source: bool = False
 ) -> Generator[Token, None, None]: ...

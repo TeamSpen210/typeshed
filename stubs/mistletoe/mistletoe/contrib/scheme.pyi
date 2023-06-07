@@ -1,14 +1,12 @@
 import re
+from collections import ChainMap
 from collections.abc import Callable, Sequence
 from typing import ClassVar, TypeAlias
 
-from collections import ChainMap
-
-from mistletoe.core_tokens import MatchObj
-
 from mistletoe.base_renderer import BaseRenderer
-from mistletoe.span_token import SpanToken
 from mistletoe.block_token import BlockToken
+from mistletoe.core_tokens import MatchObj
+from mistletoe.span_token import SpanToken
 
 class Program(BlockToken):
     children: list[SpanToken]

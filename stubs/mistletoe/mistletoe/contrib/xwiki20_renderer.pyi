@@ -1,10 +1,8 @@
-from mistletoe.token import Token
-
-from mistletoe import block_token, span_token
-
 from _typeshed import Incomplete
 
+from mistletoe import block_token, span_token
 from mistletoe.base_renderer import BaseRenderer
+from mistletoe.token import Token
 
 class XWiki20Renderer(BaseRenderer[str]):
     listTokens: list[str]

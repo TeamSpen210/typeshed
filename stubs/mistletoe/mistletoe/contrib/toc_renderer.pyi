@@ -1,8 +1,8 @@
 from collections.abc import Callable
 
-from mistletoe.token import Token
-from mistletoe.html_renderer import HTMLRenderer
 from mistletoe import block_token
+from mistletoe.html_renderer import HTMLRenderer
+from mistletoe.token import Token
 
 class TOCRenderer(HTMLRenderer):
     depth: int

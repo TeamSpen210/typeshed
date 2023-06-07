@@ -1,6 +1,6 @@
-from mistletoe.token import Token
 from mistletoe import block_token as block_token, span_token as span_token
 from mistletoe.base_renderer import BaseRenderer
+from mistletoe.token import Token
 
 class HTMLRenderer(BaseRenderer[str]):
     def __init__(self, *extras: Token) -> None: ...
