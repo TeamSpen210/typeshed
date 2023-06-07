@@ -1,45 +1,56 @@
-from _typeshed import Incomplete
+import re
+from collections.abc import Callable, Sequence
+from typing import ClassVar, TypeAlias
 
-from mistletoe import BaseRenderer, block_token, span_token
+from collections import ChainMap
 
-class Program(block_token.BlockToken):
-    children: Incomplete
+from mistletoe.core_tokens import MatchObj
+
+from mistletoe.base_renderer import BaseRenderer
+from mistletoe.span_token import SpanToken
+from mistletoe.block_token import BlockToken
+
+class Program(BlockToken):
+    children: list[SpanToken]
     def __init__(self, lines) -> None: ...
 
-class Expr(span_token.SpanToken):
+class Expr(SpanToken):
     @classmethod
-    def find(cls, string): ...
+    def find(cls, string: str) -> list[MatchObj]: ...
 
-class Number(span_token.SpanToken):
-    pattern: Incomplete
-    parse_inner: bool
-    number: Incomplete
+class Number(SpanToken):
+    pattern: ClassVar[re.Pattern[str]]
+    parse_inner: ClassVar[bool] = False
+    number: object
     def __init__(self, match) -> None: ...
 
-class Variable(span_token.SpanToken):
-    pattern: Incomplete
-    parse_inner: bool
-    name: Incomplete
-    def __init__(self, match) -> None: ...
+class Variable(SpanToken):
+    pattern: ClassVar[re.Pattern[str]]
+    parse_inner: ClassVar[bool] = False
+    name: str
+    def __init__(self, match: MatchObj) -> None: ...
 
-class Whitespace(span_token.SpanToken):
-    parse_inner: bool
+class Whitespace(SpanToken):
+    parse_inner: ClassVar[bool] = False
     def __new__(self, _) -> None: ...
 
-class Procedure:
-    params: Incomplete
-    body: Incomplete
-    env: Incomplete
-    def __init__(self, expr_token, body, env) -> None: ...
+_SchemeTokens: TypeAlias = Expr | Number | Variable | Whitespace
+_Env: TypeAlias = ChainMap[str, object]
 
-class Scheme(BaseRenderer):
-    render_map: Incomplete
-    env: Incomplete
+class Procedure:
+    params: list[str]
+    body: Sequence[_SchemeTokens]
+    env: _Env
+    def __init__(self, expr_token, body, env: _Env) -> None: ...
+
+class Scheme(BaseRenderer[object]):
+    render_map: dict[str, Callable[[_SchemeTokens], object]]
+    env: _Env
     def __init__(self) -> None: ...
-    def render_inner(self, token): ...
-    def render_expr(self, token): ...
-    def render_number(self, token): ...
-    def render_variable(self, token): ...
-    def define(self, *args) -> None: ...
-    def cond(self, *exprs): ...
-    def apply(self, proc, args): ...
+    def render_inner(self, token: _SchemeTokens) -> object: ...
+    def render_expr(self, token: Expr) -> object: ...
+    def render_number(self, token: Number) -> object: ...
+    def render_variable(self, token: Variable) -> object: ...
+    def define(self, *args: _SchemeTokens) -> None: ...
+    def cond(self, *exprs: _SchemeTokens) -> object: ...
+    def apply(self, proc: Procedure, args: SpanToken) -> object: ...

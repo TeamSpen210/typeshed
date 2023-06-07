@@ -1,8 +1,13 @@
-from _typeshed import Incomplete
+from typing import ClassVar
 
+from mistletoe.block_token import BlockCode
+
+from mistletoe.token import Token
+
+from pygments.formatters.html import HtmlFormatter
 from mistletoe import HTMLRenderer
 
 class PygmentsRenderer(HTMLRenderer):
-    formatter: Incomplete
-    def __init__(self, *extras, style: str = ...) -> None: ...
-    def render_block_code(self, token): ...
+    formatter: ClassVar[HtmlFormatter[str]]
+    def __init__(self, *extras: Token, style: str = 'default') -> None: ...
+    def render_block_code(self, token: BlockCode) -> str: ...

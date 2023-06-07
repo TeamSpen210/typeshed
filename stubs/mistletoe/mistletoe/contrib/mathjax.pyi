@@ -1,7 +1,11 @@
+from typing import ClassVar
+
+from mistletoe.block_token import Document
+from mistletoe.latex_token import Math
 from mistletoe.html_renderer import HTMLRenderer
 from mistletoe.latex_renderer import LaTeXRenderer
 
 class MathJaxRenderer(HTMLRenderer, LaTeXRenderer):
-    mathjax_src: str
-    def render_math(self, token): ...
-    def render_document(self, token): ...
+    mathjax_src: ClassVar[str]
+    def render_math(self, token: Math): ...
+    def render_document(self, token: Document): ...
