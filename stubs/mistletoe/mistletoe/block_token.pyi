@@ -22,7 +22,7 @@ class BlockToken(token.Token):
 class Document(BlockToken):
     footnotes: dict[str, core_tokens._DestTitle]
     children: list[BlockToken]
-    def __init__(self, lines: ParseBuffer) -> None: ...
+    def __init__(self, lines: Iterable[str] | str) -> None: ...
 
 class Heading(BlockToken):
     repr_attributes: ClassVar[tuple[str, ...]]
